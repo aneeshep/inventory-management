@@ -1,48 +1,101 @@
 <template>
   <div class="app">
-    <header class="top-nav">
-      <div class="nav-container">
-        <div class="logo">
-          <h1>{{ t('nav.companyName') }}</h1>
-          <span class="subtitle">{{ t('nav.subtitle') }}</span>
-        </div>
-        <nav class="nav-tabs">
-          <router-link to="/" :class="{ active: $route.path === '/' }">
-            {{ t('nav.overview') }}
-          </router-link>
-          <router-link to="/inventory" :class="{ active: $route.path === '/inventory' }">
-            {{ t('nav.inventory') }}
-          </router-link>
-          <router-link to="/orders" :class="{ active: $route.path === '/orders' }">
-            {{ t('nav.orders') }}
-          </router-link>
-          <router-link to="/spending" :class="{ active: $route.path === '/spending' }">
-            {{ t('nav.finance') }}
-          </router-link>
-          <router-link to="/demand" :class="{ active: $route.path === '/demand' }">
-            {{ t('nav.demandForecast') }}
-          </router-link>
-          <router-link to="/reports" :class="{ active: $route.path === '/reports' }">
-            Reports
-          </router-link>
-        </nav>
-        <LanguageSwitcher />
+
+    <!-- Sidebar -->
+    <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-name">{{ t('nav.companyName') }}</span>
+        <span class="sidebar-brand-sub">{{ t('nav.subtitle') }}</span>
+        <button class="sidebar-toggle" @click="toggleSidebar" :title="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="toggle-icon" :class="{ rotated: sidebarCollapsed }">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <router-link to="/" :class="{ active: $route.path === '/' }" :title="sidebarCollapsed ? t('nav.overview') : ''">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          </svg>
+          <span>{{ t('nav.overview') }}</span>
+        </router-link>
+
+        <router-link to="/inventory" :class="{ active: $route.path === '/inventory' }" :title="sidebarCollapsed ? t('nav.inventory') : ''">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+            <path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>
+          </svg>
+          <span>{{ t('nav.inventory') }}</span>
+        </router-link>
+
+        <router-link to="/orders" :class="{ active: $route.path === '/orders' }" :title="sidebarCollapsed ? t('nav.orders') : ''">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+            <path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>
+          </svg>
+          <span>{{ t('nav.orders') }}</span>
+        </router-link>
+
+        <router-link to="/spending" :class="{ active: $route.path === '/spending' }" :title="sidebarCollapsed ? t('nav.finance') : ''">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="14" x="2" y="5" rx="2"/>
+            <line x1="2" x2="22" y1="10" y2="10"/>
+          </svg>
+          <span>{{ t('nav.finance') }}</span>
+        </router-link>
+
+        <router-link to="/demand" :class="{ active: $route.path === '/demand' }" :title="sidebarCollapsed ? t('nav.demandForecast') : ''">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+            <polyline points="16 7 22 7 22 13"/>
+          </svg>
+          <span>{{ t('nav.demandForecast') }}</span>
+        </router-link>
+
+        <router-link to="/reports" :class="{ active: $route.path === '/reports' }" :title="sidebarCollapsed ? 'Reports' : ''">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/>
+            <line x1="6" x2="6" y1="20" y2="14"/>
+          </svg>
+          <span>Reports</span>
+        </router-link>
+
+        <router-link to="/backlog" :class="{ active: $route.path === '/backlog' }" :title="sidebarCollapsed ? 'Backlog' : ''">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>Backlog</span>
+        </router-link>
+      </nav>
+
+      <div class="sidebar-footer">
         <ProfileMenu
           @show-profile-details="showProfileDetails = true"
           @show-tasks="showTasks = true"
         />
       </div>
-    </header>
-    <FilterBar />
-    <main class="main-content">
-      <router-view />
-    </main>
+    </aside>
 
+    <!-- Main area -->
+    <div class="main-wrapper">
+      <div class="main-topbar">
+        <LanguageSwitcher />
+      </div>
+      <FilterBar />
+      <main class="main-content">
+        <router-view />
+      </main>
+    </div>
+
+    <!-- Modals (unchanged) -->
     <ProfileDetailsModal
       :is-open="showProfileDetails"
       @close="showProfileDetails = false"
     />
-
     <TasksModal
       :is-open="showTasks"
       :tasks="tasks"
@@ -51,11 +104,12 @@
       @delete-task="deleteTask"
       @toggle-task="toggleTask"
     />
+
   </div>
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { api } from './api'
 import { useAuth } from './composables/useAuth'
 import { useI18n } from './composables/useI18n'
@@ -80,6 +134,20 @@ export default {
     const showProfileDetails = ref(false)
     const showTasks = ref(false)
     const apiTasks = ref([])
+
+    // Sidebar collapse state - auto-collapse on small screens
+    const sidebarCollapsed = ref(window.innerWidth < 1024)
+
+    const toggleSidebar = () => {
+      sidebarCollapsed.value = !sidebarCollapsed.value
+    }
+
+    // Auto-collapse/expand on resize
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        sidebarCollapsed.value = true
+      }
+    }
 
     // Merge mock tasks from currentUser with API tasks
     const tasks = computed(() => {
@@ -146,7 +214,14 @@ export default {
       }
     }
 
-    onMounted(loadTasks)
+    onMounted(() => {
+      loadTasks()
+      window.addEventListener('resize', handleResize)
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', handleResize)
+    })
 
     return {
       t,
@@ -155,7 +230,9 @@ export default {
       tasks,
       addTask,
       deleteTask,
-      toggleTask
+      toggleTask,
+      sidebarCollapsed,
+      toggleSidebar
     }
   }
 }
@@ -168,9 +245,24 @@ export default {
   box-sizing: border-box;
 }
 
+:root {
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 64px;
+  --sidebar-transition: width 0.25s ease;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-active: #f1f5f9;
+  --sidebar-active-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-border: rgba(255, 255, 255, 0.07);
+  --content-bg: #f8fafc;
+  --nav-link-radius: 7px;
+}
+
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: #f8fafc;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: var(--content-bg);
   color: #1e293b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -178,99 +270,200 @@ body {
 
 .app {
   display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  border-right: 1px solid var(--sidebar-border);
+  transition: var(--sidebar-transition);
 }
 
-.top-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+.sidebar-brand {
+  padding: 1.5rem 1.25rem 1.25rem;
+  border-bottom: 1px solid var(--sidebar-border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 72px; /* prevents height jump when text hides */
 }
 
-.nav-container {
-  max-width: 1600px;
-  margin: 0 auto;
+.sidebar-brand-name {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.sidebar-brand-sub {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--sidebar-text);
+  margin-top: 0.25rem;
+  font-weight: 400;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-nav a {
   display: flex;
   align-items: center;
-  padding: 0 2rem;
-  height: 70px;
-}
-
-.nav-container > .nav-tabs {
-  margin-left: auto;
-  margin-right: 1rem;
-}
-
-.nav-container > .language-switcher {
-  margin-right: 1rem;
-}
-
-.logo {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-}
-
-.logo h1 {
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
-}
-
-.subtitle {
-  font-size: 0.813rem;
-  color: #64748b;
-  font-weight: 400;
-  padding-left: 0.75rem;
-  border-left: 1px solid #e2e8f0;
-}
-
-.nav-tabs {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.nav-tabs a {
-  padding: 0.625rem 1.25rem;
-  color: #64748b;
+  gap: 0.625rem;
+  padding: 0.5625rem 0.75rem;
+  border-radius: var(--nav-link-radius);
+  color: var(--sidebar-text);
   text-decoration: none;
+  font-size: 0.875rem;
   font-weight: 500;
-  font-size: 0.938rem;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  position: relative;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.nav-tabs a:hover {
-  color: #0f172a;
-  background: #f1f5f9;
+.sidebar-nav a svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
 }
 
-.nav-tabs a.active {
-  color: #2563eb;
-  background: #eff6ff;
+.sidebar-nav a:hover {
+  background: var(--sidebar-hover-bg);
+  color: var(--sidebar-text-active);
 }
 
-.nav-tabs a.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #2563eb;
+.sidebar-nav a:hover svg {
+  opacity: 1;
+}
+
+.sidebar-nav a.active {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-text-active);
+}
+
+.sidebar-nav a.active svg {
+  opacity: 1;
+}
+
+.sidebar-footer {
+  flex-shrink: 0;
+  padding: 0.875rem 0.75rem;
+  border-top: 1px solid var(--sidebar-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* ── Sidebar toggle button ── */
+.sidebar-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: var(--sidebar-text);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease, background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-toggle:hover {
+  color: var(--sidebar-text-active);
+  background: var(--sidebar-hover-bg);
+}
+
+.toggle-icon {
+  transition: transform 0.25s ease;
+}
+
+.toggle-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* ── Collapsed sidebar ── */
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+  min-width: var(--sidebar-collapsed-width);
+}
+
+/* Hide text labels when collapsed */
+.sidebar.collapsed .sidebar-brand-name,
+.sidebar.collapsed .sidebar-brand-sub {
+  display: none;
+}
+
+/* Center toggle button in brand area when collapsed */
+.sidebar.collapsed .sidebar-brand {
+  padding: 1.25rem 0;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Center nav links, hide text */
+.sidebar.collapsed .sidebar-nav {
+  padding: 0.75rem 0.5rem;
+  align-items: center;
+}
+
+.sidebar.collapsed .sidebar-nav a {
+  justify-content: center;
+  padding: 0.625rem;
+  width: 100%;
+}
+
+.sidebar.collapsed .sidebar-nav a span {
+  display: none;
+}
+
+/* Center footer items */
+.sidebar.collapsed .sidebar-footer {
+  flex-direction: column;
+  padding: 0.875rem 0.5rem;
+  gap: 0.5rem;
+}
+
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.main-topbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  background: var(--content-bg);
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
 }
 
 .main-content {
   flex: 1;
-  max-width: 1600px;
-  width: 100%;
-  margin: 0 auto;
+  overflow-y: auto;
   padding: 1.5rem 2rem;
 }
 
